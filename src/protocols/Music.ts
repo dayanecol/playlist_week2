@@ -1,4 +1,5 @@
-type Music = {
+type MusicEntity = {
+    id: number,
     favorite?: boolean,
     title: string,
     artist: string, 
@@ -6,11 +7,14 @@ type Music = {
     album: string
 }
 
+type Music = Omit<MusicEntity,"id">
+
 type Favorite = {
     isFavorite: boolean
 }
 
 export {
     Music,
+    MusicEntity,
     Favorite
 }
