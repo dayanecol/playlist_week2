@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { Music, Favorite, } from "../protocols/Music.js"
 import { musicSchema, isFavoriteSchema } from "../schemas/schema.js";
-import { selectAll, insertUnique, updateUnique} from "../repositories/repository.js";
-//import { insertUnique, selectAll, selectAlbum, removeUnique, updateUnique} from "../repositories/repository.js";
+import { selectAll, insertUnique, updateUnique, selectAlbum, removeUnique} from "../repositories/repository.js";
+
 
 async function getPlaylist (req: Request,res: Response){
 
@@ -18,7 +18,6 @@ async function getPlaylist (req: Request,res: Response){
 }
 
 async function postNewMusic (req: Request,res: Response){
-    //:Promise<void>
     const music = req.body as Music;
     
     const musicValidation = musicSchema.validate(music,{ abortEarly: false });
@@ -72,27 +71,26 @@ async function deleteMusic (req: Request,res: Response){
 
     const { id } = req.params;
 
-//     try {
-//         await removeUnique(Number(id));
-//         res.status(200).send({ message: "music deleted successfully"})
-//     } catch (error) {
-//         res.status(500).send({ message: error });
-//         return;
-//     }
-    return [];
+    try {
+        await removeUnique(Number(id));
+        res.status(200).send({ message: "music deleted successfully"})
+    } catch (error) {
+        res.status(500).send({ message: error });
+        return;
+    }
 }
 
 async function getAlbum (req: Request,res: Response){
     const { album } = req.params;
 
-    // try {
-    //     const albumResult = (await selectAlbum(album)).rows;
-    //     res.status(200).send(albumResult)
-    //     return;
-    // } catch (error) {
-    //     res.status(500).send({ message: error });
-    //     return;
-    // }
+    try {
+        const albumResult = (await selectAlbum(album));
+        res.status(200).send(albumResult)
+        return;
+    } catch (error) {
+        res.status(500).send({ message: error });
+        return;
+    }
     return [];
     
 }
